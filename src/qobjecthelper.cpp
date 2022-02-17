@@ -54,6 +54,14 @@ QVariantMap QObjectHelper::qobject2qvariant( const QObject* object,
 
     if (!metaproperty.isReadable() || ignoredProperties.contains(QLatin1String(name)))
       continue;
+    if(!metaproperty.isStored())
+      continue;
+    else if(!metaproperty.isUser() && QLatin1String("QString") == QLatin1String(metaproperty.typeName()))
+    {
+      if(object->property(name).toString().isEmpty()) continue;
+    }
+    else if(!metaproperty.isUser() && QLatin1String("QString") != QLatin1String(metaproperty.typeName()))
+      continue;
 
     QVariant value = object->property(name);
     result[QLatin1String(name)] = value;
